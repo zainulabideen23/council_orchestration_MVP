@@ -9,3 +9,7 @@ learning/
 gen/
 const {.txt
 council-proto/
+server/package.json
+server/package-lock.json
+server/prisma.config.ts
+server/prisma/

@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Council Orchestration Console — Backend API",
-  "main": "src/index.js",
+  "main": "server/src/index.js",
   "scripts": {
-    "dev": "node src/index.js",
-    "start": "NODE_ENV=production node src/index.js",
+    "dev": "node server/src/index.js",
+    "start": "NODE_ENV=production node server/src/index.js",
     "postinstall": "npx prisma generate",
     "build": "npx prisma generate"
   },
