@@ -2,6 +2,7 @@
 set -e
 
 PYTHON_PORT=$((PORT + 1))
+export API_PORT=$PORT
 export ORCHESTRATOR_URL="http://localhost:$PYTHON_PORT"
 
 cd orchestrator
