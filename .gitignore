@@ -5,3 +5,6 @@ client/dist/
 *.pyc
 __pycache__/
 .DS_Store
+learning/
+gen/
+const {.txt

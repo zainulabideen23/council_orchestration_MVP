@@ -1,9 +1,0 @@
-{
-  "name": "proto-spec-gen",
-  "version": "1.0.0",
-  "description": "Generate prototype specification document",
-  "main": "generate.js",
-  "dependencies": {
-    "docx": "^8.5.0"
-  }
-}
