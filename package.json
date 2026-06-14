@@ -9,6 +9,7 @@
     "postinstall": "npx prisma generate",
     "build": "npx prisma generate"
   },
+  "engines": { "node": ">=18" },
   "keywords": [],
   "author": "",
   "license": "ISC",
