@@ -1,0 +1,1 @@
+It turns your database tables into JavaScript objects you can create, find, update without writing SQL. Instead of INSERT INTO agents (name) VALUES ('Bob'), you write prisma.agent.create({ data: { name: 'Bob' } }) — and you get autocomplete for every column.

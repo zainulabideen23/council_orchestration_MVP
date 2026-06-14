@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SeatEnum {
+  COUNCIL
+  ON_DECK
+  BUNKHOUSE
+  RETIRED
+}
+
+enum ProjectStatus {
+  DRAFT
+  RUNNING
+  PAUSED
+  COMPLETE
+}
+
+enum StageStatus {
+  PENDING
+  ACTIVE
+  COMPLETE
+}
+
+enum RoundStatus {
+  PENDING
+  RUNNING
+  COMPLETE
+  FAILED
+}
+
+enum SeatType {
+  COUNCIL
+  ON_DECK
+}
+
+model Agent {
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String
+  personaPrompt String
+  model         String         @default("llama-3.1-8b-instant")
+  seat          SeatEnum       @default(BUNKHOUSE)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  responses     AgentResponse[]
+  stageCouncil  StageCouncil[]
+}
+
+model Project {
+  id             String        @id @default(uuid()) @db.Uuid
+  name           String
+  query          String
+  status         ProjectStatus @default(DRAFT)
+  currentStageId String?       @db.Uuid
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  stages         Stage[]
+  runningBrief   RunningBrief?
+}
+
+model Stage {
+  id           String       @id @default(uuid()) @db.Uuid
+  projectId    String       @db.Uuid
+  name         String
+  orderIndex   Int
+  roundsTotal  Int          @default(3)
+  roundsDone   Int          @default(0)
+  status       StageStatus  @default(PENDING)
+  createdAt    DateTime     @default(now())
+  project      Project      @relation(fields: [projectId], references: [id])
+  rounds       Round[]
+  stageCouncil StageCouncil[]
+}
+
+model StageCouncil {
+  id              String   @id @default(uuid()) @db.Uuid
+  stageId         String   @db.Uuid
+  agentId         String   @db.Uuid
+  seatType        SeatType
+  minimalBriefing String?
+  stage           Stage    @relation(fields: [stageId], references: [id])
+  agent           Agent    @relation(fields: [agentId], references: [id])
+
+  @@unique([stageId, agentId])
+}
+
+model Round {
+  id           String      @id @default(uuid()) @db.Uuid
+  stageId      String      @db.Uuid
+  roundNumber  Int
+  status       RoundStatus @default(PENDING)
+  query        String
+  synthesis    String?
+  createdAt    DateTime    @default(now())
+  completedAt  DateTime?
+  stage        Stage       @relation(fields: [stageId], references: [id])
+  responses    AgentResponse[]
+
+  @@unique([stageId, roundNumber])
+}
+
+model AgentResponse {
+  id         String   @id @default(uuid()) @db.Uuid
+  roundId    String   @db.Uuid
+  agentId    String   @db.Uuid
+  response   String
+  tokensUsed Int?
+  latencyMs  Int?
+  createdAt  DateTime @default(now())
+  round      Round    @relation(fields: [roundId], references: [id])
+  agent      Agent    @relation(fields: [agentId], references: [id])
+
+  @@unique([roundId, agentId])
+}
+
+model RunningBrief {
+  id         String   @id @default(uuid()) @db.Uuid
+  projectId  String   @unique @db.Uuid
+  content    String   @default("")
+  roundCount Int      @default(0)
+  updatedAt  DateTime @updatedAt
+  project    Project  @relation(fields: [projectId], references: [id])
+}

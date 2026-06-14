@@ -1,0 +1,12 @@
+A round is one execution cycle of the Council. The sequence per round is:
+1. All Council agents fire in parallel (each gets persona + previous round + running brief)
+2. Summarizer runs — updates the running brief with key points from this round
+3. Leader runs — produces a synthesis report (agreements, tensions, insights, blind spots)
+4. If roundsDone == roundsTotal, the stage auto-transitions
+Example from the seed data:
+- Stage 1 "Problem Framing" has roundsTotal: 2
+- That means the Council agents deliberate twice before moving on
+- Round 1: agents respond with no prior context (first round)
+- Round 2: agents see Round 1's responses + the updated brief, so they can build on/critique prior discussion
+- After Round 2 completes, the system auto-transitions to Stage 2
+So rounds = number of deliberation cycles per stage. More rounds = deeper iterative analysis.
